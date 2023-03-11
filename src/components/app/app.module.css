@@ -1,0 +1,17 @@
+.app {
+  width: 100vw;
+  background-color: #131316;
+}
+
+.main {  
+  width: 100%;
+  max-width: 1240px;  
+  margin: 0 auto;
+}
+
+.wrapper {
+  display: flex;
+  justify-content: center;
+  gap: 40px;
+  width: 100%;
+}

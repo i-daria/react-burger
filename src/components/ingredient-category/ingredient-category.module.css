@@ -1,0 +1,21 @@
+.list {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 32px 24px;
+  margin: 0;
+  margin-bottom: 40px;
+  padding: 0;
+  padding-left: 16px;
+  padding-right: 8px;
+  list-style: none;
+}
+
+.item {
+  display: flex;
+  position: relative;
+  width: 100%;
+  max-width: 272px;
+  height: 208px;
+  overflow: hidden;
+}

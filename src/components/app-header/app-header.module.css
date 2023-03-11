@@ -1,0 +1,33 @@
+.appHeader {
+  width: 100%;
+  background-color: #1C1C21;;
+}
+
+.appHeaderWrapper {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  max-width: 1240px;
+  margin: 0 auto;
+  padding: 17px 0;
+}
+
+.logo {
+  margin-left: 104px;
+  margin-right: 280px;
+}
+
+.link {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 8px;
+  color: #F2F2F3;
+  text-decoration: none;
+}
+
+.link_color_dark {
+  color: #8585AD;
+}
