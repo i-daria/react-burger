@@ -9,9 +9,9 @@ const IngredientCategory = ({id, title, items, onItemClick}) => {
     <>
       <h2 id={id} className='text text_type_main-medium mb-6'>{title}</h2>
       <ul className={`${styles.list}`}>
-      {items.map((item, index) => {
+      {items.map((item) => {
         return (
-          <li key={index} className={styles.item} > 
+          <li key={item._id} className={styles.item} > 
             <BurgerIngredient data={item} count={1} onClick={onItemClick}/>
           </li>
         );

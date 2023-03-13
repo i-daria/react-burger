@@ -50,12 +50,7 @@ const BurgerIngredients = ({ingredients}) => {
       { modalData &&
       <Modal title='Детали ингредиента' onClose={closeModal}>
         <IngredientDetails 
-          name={modalData.name} 
-          image={modalData.image_large} 
-          proteins={modalData.proteins} 
-          carbohydrates={modalData.carbohydrates} 
-          fat={modalData.fat} 
-          calories={modalData.calories}
+          ingredient={modalData}
         />
       </Modal>
       }
