@@ -1,0 +1,14 @@
+.modal {
+  position: fixed;
+  top: 140px;
+  width: 720px;
+  padding: 40px;
+  box-sizing: border-box;  
+  background-color: #000;
+  border-radius: 40px;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+}
