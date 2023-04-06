@@ -1,15 +1,20 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import styles from './burger-constructor.module.css';
 import {ConstructorElement, CurrencyIcon, Button, DragIcon} from '@ya.praktikum/react-developer-burger-ui-components';
 import Modal from '../modal/modal';
 import OrderDetails from '../order-details/order-details';
-import PropTypes from "prop-types";
-import { ingredientPropTypes } from '../../utils/prop-types';
-import currency from '../../images/icon36.svg'
+import currency from '../../images/icon36.svg';
+import { cartContext } from '../../services/cartContext.js';
+import { orderContext } from '../../services/orderContext';
+import { postOrder } from '../../utils/api';
 
-const BurgerConstructor = ({ingredients}) => {
-  const defaultBuns = ingredients.find((item) => item.type === 'bun');
-  const fillings = ingredients.filter((item) => item.type !== 'bun');
+const BurgerConstructor = () => {
+  const cart = useContext(cartContext);  
+  const [order, setOrder] = React.useState({'number': null, 'name': '', 'ingredients':[]});  
+  const fillings = cart.ingredients;
+  const defaultBuns = cart.bun;
+  const total = cart.total;
+  
   const [orderModal, setOrderModal] = React.useState(false); //показать попап оформления заказа
   const showOrderModal = ()  => {
     setOrderModal(true);
@@ -18,6 +23,14 @@ const BurgerConstructor = ({ingredients}) => {
   const onCloseModal = () => {
     setOrderModal(false);
   };
+
+  const onPostOrder = () => { 
+    postOrder([defaultBuns, ...fillings])
+    .then(res => res.success === true ? setOrder({'number': res.order.number, 'name': res.name, 'ingredients':[defaultBuns, ...fillings]}) : console.log(res))
+    .catch(error => console.log(error));
+
+    showOrderModal();
+  }
 
   return (
     <>
@@ -55,10 +68,10 @@ const BurgerConstructor = ({ingredients}) => {
         </div>
         <div className={styles.totalWrapper}>
           <p className={`${styles.total} text text_type_digits-medium`}>
-            610        
+           {total}        
             <img src={currency} alt='валюта'/>
           </p>
-          <Button htmlType="button" type="primary" size="large" onClick={showOrderModal}>
+          <Button htmlType="button" type="primary" size="large" onClick={onPostOrder}>
             Оформить заказ
           </Button>
         </div>
@@ -66,15 +79,13 @@ const BurgerConstructor = ({ingredients}) => {
       }
       { orderModal &&
         <Modal onClose={onCloseModal}>
-          <OrderDetails />
+          <orderContext.Provider value={order}>
+            <OrderDetails />
+          </orderContext.Provider>
         </Modal>
       }
     </>
   );
-}
-
-BurgerConstructor.propTypes = {
-  ingredients: PropTypes.arrayOf(ingredientPropTypes.isRequired).isRequired
 }
 
 export default BurgerConstructor;

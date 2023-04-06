@@ -1,3 +1,4 @@
+import React from 'react';
 import styles from './burger-ingredient.module.css';
 import {Counter, CurrencyIcon} from '@ya.praktikum/react-developer-burger-ui-components';
 import PropTypes from 'prop-types';
@@ -33,4 +34,4 @@ BurgerIngredient.propTypes = {
   onClick: PropTypes.func,
 };
 
-export default BurgerIngredient;
+export default React.memo(BurgerIngredient);
