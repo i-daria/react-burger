@@ -12,9 +12,13 @@ const checkSuccess = (res) => {
 const request = (endpoint, options) => {
   return fetch(`${BASE_URL}${endpoint}`, options)
     .then(checkResponse)
-    .then(checkSuccess);
 };
 
-export const getBurgerIngredients = () => request("ingredients");
+export const getBurgerIngredients = () => request("ingredients").then(checkSuccess);
+export const postOrder = (ingredients) => request("orders", {
+  method: 'POST',
+  body: JSON.stringify({ingredients: ingredients.map(elem => elem._id)}),
+  headers: {'Content-Type': 'application/json'}
+});
 
 
