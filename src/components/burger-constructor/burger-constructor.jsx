@@ -26,7 +26,7 @@ const BurgerConstructor = () => {
 
   const onPostOrder = () => { 
     postOrder([defaultBuns, ...fillings])
-    .then(res => setOrder({'number': res.order.number, 'name': res.name, 'ingredients':[defaultBuns, ...fillings]}))
+    .then(res => res.success === true ? setOrder({'number': res.order.number, 'name': res.name, 'ingredients':[defaultBuns, ...fillings]}) : console.log(res))
     .catch(error => console.log(error));
 
     showOrderModal();

@@ -1,4 +1,4 @@
-import  {useContext} from 'react';
+import  React, {useContext} from 'react';
 import styles from './ingredient-category.module.css';
 import BurgerIngredient from '../burger-ingredient/burger-ingredient';
 import PropTypes from 'prop-types';
@@ -33,4 +33,4 @@ IngredientCategory.propTypes = {
   onItemClick: PropTypes.func,
 };
 
-export default IngredientCategory;
+export default React.memo(IngredientCategory);

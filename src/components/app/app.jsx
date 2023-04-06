@@ -5,6 +5,7 @@ import BurgerConstructor from '../burger-constructor/burger-constructor';
 import BurgerIngredients from '../burger-ingredients/burger-ingredients';
 import {getBurgerIngredients} from '../../utils/api.js';
 import {cartContext} from '../../services/cartContext.js';
+import { allIngredientsContext } from '../../services/allIngredientsContext';
 
 function App() {
   const [ingredients, setIngredients] = React.useState([]);  
@@ -103,7 +104,9 @@ function App() {
         <h1 className="text text_type_main-large mt-10 mb-5">Соберите бургер</h1>  
         <div className={styles.wrapper}>            
           <cartContext.Provider value={cart}>
-            <BurgerIngredients ingredients={ingredients} />
+            <allIngredientsContext.Provider value={ingredients}>
+              <BurgerIngredients />
+            </allIngredientsContext.Provider>
             <BurgerConstructor /> 
           </cartContext.Provider>  
         </div>
