@@ -19,15 +19,11 @@
   margin-right: -16px;
   padding: 0;
   padding-right: 8px;
+  min-height: 272px;
   max-height: 52vh;
   overflow-y: scroll;
 }
 
-.item {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
 .totalWrapper {
   display: flex;
   justify-content: flex-end;
