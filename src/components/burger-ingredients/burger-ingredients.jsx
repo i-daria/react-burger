@@ -6,6 +6,7 @@ import Modal from '../modal/modal';
 import IngredientDetails from '../ingredient-details/ingredient-details';
 import { useDispatch, useSelector } from 'react-redux';
 import {RESET_CURRENT_INGREDIENT, CLOSE_MODAL} from '../../services/actions/actions';
+import { useInView } from 'react-intersection-observer';
 
 const BurgerIngredients = () => { 
   const dispatch = useDispatch();
@@ -29,6 +30,26 @@ const BurgerIngredients = () => {
     dispatch({type: CLOSE_MODAL});
   };
 
+// настройки
+let options = {
+  threshold: 0.55
+};
+// функция обратного вызова
+let callback = function(entries, observer){
+  entries.forEach(entry => {    
+    if(entry.isIntersecting && entry.intersectionRatio >= 0.55) {
+      setCurrentTab(entry.target.id);
+    }
+  });
+};
+// наблюдатель
+let observer = new IntersectionObserver(callback, options);
+let targets = document.querySelectorAll('.category-title');
+targets.forEach(target => {
+  observer.observe(target);
+});
+
+
   return (
     <>
       <section className={styles.section}>
@@ -43,7 +64,7 @@ const BurgerIngredients = () => {
             Начинки
           </Tab>      
         </nav>
-        <div className={styles.content}>
+        <div className={styles.content} id="scrollBlock">
           <IngredientCategory id='buns' title='Булки' items={buns} />
           <IngredientCategory id='sauces' title='Соусы' items={sauces} />        
           <IngredientCategory id='mains' title='Начинки' items={mains} />

@@ -11,7 +11,7 @@ const IngredientCategory = ({id, title, items}) => {
   
   return (
     <>
-      <h2 id={id} className='text text_type_main-medium mb-6'>{title}</h2>
+      <h2 id={id} className='category-title text text_type_main-medium mb-6'>{title}</h2>
       <ul className={`${styles.list}`}>
       {items.map((item) => {        
         let count = null;     
