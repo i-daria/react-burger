@@ -1,4 +1,4 @@
-import {SHOW_MODAL, CLOSE_MODAL} from '../actions/actions';
+import {SHOW_MODAL, CLOSE_MODAL} from '../actions/modal';
 
 const initialState = {
   isOpen: false

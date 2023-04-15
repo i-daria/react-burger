@@ -4,7 +4,8 @@ import {Counter, CurrencyIcon} from '@ya.praktikum/react-developer-burger-ui-com
 import PropTypes from 'prop-types';
 import { ingredientPropTypes } from '../../utils/prop-types';
 import { useDispatch } from 'react-redux';
-import {SET_CURRENT_INGREDIENT, SHOW_MODAL} from '../../services/actions/actions';
+import {SET_CURRENT_INGREDIENT } from '../../services/actions/ingredients';
+import { SHOW_MODAL} from '../../services/actions/modal';
 import { useDrag } from 'react-dnd';
 
 const BurgerIngredient = ({data, count}) => {

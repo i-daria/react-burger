@@ -1,8 +1,9 @@
 import styles from './ingredient-details.module.css';
 import { useSelector } from 'react-redux';
+import { getCurrentIngredient } from '../../utils/constants';
 
 const IngredientDetails = () => {
-  const ingredient = useSelector(store => store.ingredients.currentIngredient);
+  const ingredient = useSelector(getCurrentIngredient);
   const {name, image, proteins, carbohydrates, fat, calories} = ingredient;
   return (
     <div className={styles.content}>

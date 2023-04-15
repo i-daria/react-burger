@@ -6,11 +6,12 @@ import Modal from '../modal/modal';
 import OrderDetails from '../order-details/order-details';
 import currency from '../../images/icon36.svg';
 import { useDispatch, useSelector } from 'react-redux';
-import { orderContext } from '../../services/orderContext';
 import { postOrderToServer } from '../../utils/api';
 import { useDrop} from 'react-dnd';
-import { ADD_INGREDIENT, ADD_BUN} from '../../services/actions/actions';
+import { ADD_INGREDIENT, ADD_BUN, CLEAR_INGREDIENTS } from '../../services/actions/ingredients';
+import {POST_ORDER_REQUEST, POST_ORDER_SUCCESS, POST_ORDER_ERROR} from '../../services/actions/order';
 import { v4 as uuid } from 'uuid';
+import { getSelectedIngredients } from '../../utils/constants'; 
 
 const BurgerConstructor = () => {
   const dispatch = useDispatch();
@@ -32,11 +33,10 @@ const BurgerConstructor = () => {
     }
   });
 
-  const selectedIngredients = useSelector(store => store.ingredients.selectedIngredients); 
-  const [order, setOrder] = React.useState({'number': null, 'name': '', 'ingredients':[]});  
+  const selectedIngredients = useSelector(getSelectedIngredients);
   const fillings = selectedIngredients.ingredients;
   const buns = selectedIngredients.bun;
-  const total = buns.price * 2 + fillings.reduce((total, item) => total + item.price, 0);
+  const total = React.useMemo(() => buns.price * 2 + fillings.reduce((total, item) => total + item.price, 0), [buns, fillings]);
   
   const [orderModal, setOrderModal] = React.useState(false); //показать попап оформления заказа
   const showOrderModal = ()  => {
@@ -48,9 +48,27 @@ const BurgerConstructor = () => {
   };
 
   const onPostOrder = () => { 
+    dispatch({
+      type: POST_ORDER_REQUEST, 
+    });
     postOrderToServer([buns, ...fillings])
-    .then(res => res.success === true ? setOrder({'number': res.order.number, 'name': res.name, 'ingredients':[buns, ...fillings]}) : console.log(res))
-    .catch(error => console.log(error));
+    .then(res => {
+      if (res.success === true) {
+        dispatch({
+          type: POST_ORDER_SUCCESS,
+          name: res.name,
+          number: res.order.number,
+        });
+        dispatch({
+          type: CLEAR_INGREDIENTS,
+        })
+      } else {
+        console.log(res)
+      }
+    })
+    .catch(error => dispatch({
+      type: POST_ORDER_ERROR})
+    );
 
     showOrderModal();
   };
@@ -95,13 +113,11 @@ const BurgerConstructor = () => {
       }
       { orderModal &&
         <Modal onClose={onCloseModal}>
-          <orderContext.Provider value={order}>
             <OrderDetails />
-          </orderContext.Provider>
         </Modal>
       }
     </>
   );
 }
 
-export default BurgerConstructor;
+export default React.memo(BurgerConstructor);

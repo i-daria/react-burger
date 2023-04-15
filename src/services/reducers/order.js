@@ -2,7 +2,7 @@ import {
   POST_ORDER_REQUEST,
   POST_ORDER_SUCCESS,
   POST_ORDER_ERROR
-} from '../actions/actions.js';
+} from '../actions/order';
 
 const initialState = {
   isOrderRequest: false,
@@ -29,13 +29,13 @@ export const orderReducer = (state = initialState, action) => {
         isOrderError: false,
         order: {
           name: action.name,
-          number: action.order.number
+          number: action.number
         }
       }
     }
     case POST_ORDER_ERROR: {
       return {
-        ...state,        
+        ...initialState,        
         isOrderRequest: false,
         isOrderError: true,     
       }

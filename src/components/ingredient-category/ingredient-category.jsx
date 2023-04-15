@@ -7,7 +7,7 @@ import { useSelector } from 'react-redux';
 
 const IngredientCategory = ({id, title, items}) => {  
   
-  const selectedIngredients = useSelector(store => [store.ingredients.selectedIngredients.bun, ...store.ingredients.selectedIngredients.ingredients]); 
+  const selectedIngredients = useSelector(store => [store.ingredients.selectedIngredients.bun, ...store.ingredients.selectedIngredients.ingredients]); //все выбранный ингредиенты в один массив
   
   return (
     <>

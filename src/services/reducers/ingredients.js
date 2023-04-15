@@ -7,8 +7,9 @@ import {
   MOVE_INGREDIENT,
   ADD_BUN,
   ADD_INGREDIENT,
-  REMOVE_INGREDIENT
-} from '../actions/actions.js';
+  REMOVE_INGREDIENT,
+  CLEAR_INGREDIENTS
+} from '../actions/ingredients';
 
 const initialState = {
   isIngredientsRequest: false,
@@ -40,7 +41,7 @@ export const ingredientsReducer = (state = initialState, action) => {
     }
     case GET_ALL_INGREDIENTS_ERROR: {
       return {
-        ...state,
+        ...initialState,
         isIngredientsRequest: false,
         isIngredientsError: true      
       }
@@ -93,6 +94,15 @@ export const ingredientsReducer = (state = initialState, action) => {
           ...state.selectedIngredients,
           ingredients: [...newState]          
         }
+      }
+    }
+    case CLEAR_INGREDIENTS: {
+      return {
+        ...state,
+        selectedIngredients: {
+          ...state.selectedIngredients,
+          ingredients: []
+        }      
       }
     }
     default: {

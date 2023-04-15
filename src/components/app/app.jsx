@@ -3,14 +3,15 @@ import styles from './app.module.css';
 import AppHeader from '../app-header/app-header';
 import BurgerConstructor from '../burger-constructor/burger-constructor';
 import BurgerIngredients from '../burger-ingredients/burger-ingredients';
-import { getAllIngredients } from '../../services/actions/actions.js';
+import { getAllIngredients } from '../../services/actions/ingredients.js';
 import { useSelector, useDispatch } from 'react-redux';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
+import { getIngredients } from '../../utils/constants';
 
 function App() {
   const dispatch = useDispatch();
-  const ingredients = useSelector(store => store.ingredients.ingredients);   
+  const ingredients = useSelector(getIngredients);   
 
   React.useEffect(() => {
     dispatch(getAllIngredients());

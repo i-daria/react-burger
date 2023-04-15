@@ -3,7 +3,7 @@ import styles from './burger-constructor-ingredient.module.css';
 import {ConstructorElement, DragIcon} from '@ya.praktikum/react-developer-burger-ui-components';
 import { useDrag, useDrop} from 'react-dnd';
 import { useDispatch } from 'react-redux';
-import {MOVE_INGREDIENT, REMOVE_INGREDIENT} from '../../services/actions/actions';
+import {MOVE_INGREDIENT, REMOVE_INGREDIENT} from '../../services/actions/ingredients';
 
 const BurgerConstructorIngredient = ({ingredient, index}) => {
   const dispatch = useDispatch();
@@ -85,4 +85,4 @@ const BurgerConstructorIngredient = ({ingredient, index}) => {
   );
 };
 
-export default BurgerConstructorIngredient;
+export default React.memo(BurgerConstructorIngredient);

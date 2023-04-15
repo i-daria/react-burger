@@ -5,17 +5,18 @@ import IngredientCategory from '../ingredient-category/ingredient-category';
 import Modal from '../modal/modal';
 import IngredientDetails from '../ingredient-details/ingredient-details';
 import { useDispatch, useSelector } from 'react-redux';
-import {RESET_CURRENT_INGREDIENT, CLOSE_MODAL} from '../../services/actions/actions';
-import { useInView } from 'react-intersection-observer';
+import {RESET_CURRENT_INGREDIENT } from '../../services/actions/ingredients';
+import { CLOSE_MODAL } from '../../services/actions/modal';
+import { getIngredients, getModalIsOpen } from '../../utils/constants';
 
 const BurgerIngredients = () => { 
   const dispatch = useDispatch();
   const [currentTab, setCurrentTab] = React.useState('buns');
-  const ingredients = useSelector(store => store.ingredients.ingredients); 
+  const ingredients = useSelector(getIngredients); 
   const buns = ingredients.filter((item) => item.type === 'bun');
   const sauces = ingredients.filter((item) => item.type === 'sauce'); 
   const mains = ingredients.filter((item) => item.type === 'main'); 
-  const modalIsOpen = useSelector(store => store.modal.isOpen);
+  const modalIsOpen = useSelector(getModalIsOpen);
   
   const handlerClick = (tab) => {
     setCurrentTab(tab);    
@@ -31,11 +32,11 @@ const BurgerIngredients = () => {
   };
 
 // настройки
-let options = {
+const options = {
   threshold: 0.55
 };
 // функция обратного вызова
-let callback = function(entries, observer){
+const callback = function(entries, observer){
   entries.forEach(entry => {    
     if(entry.isIntersecting && entry.intersectionRatio >= 0.55) {
       setCurrentTab(entry.target.id);
@@ -43,8 +44,8 @@ let callback = function(entries, observer){
   });
 };
 // наблюдатель
-let observer = new IntersectionObserver(callback, options);
-let targets = document.querySelectorAll('.category-title');
+const observer = new IntersectionObserver(callback, options);
+const targets = document.querySelectorAll('.category-title');
 targets.forEach(target => {
   observer.observe(target);
 });
