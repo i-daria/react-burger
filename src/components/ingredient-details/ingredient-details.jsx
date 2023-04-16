@@ -1,8 +1,9 @@
 import styles from './ingredient-details.module.css';
-import PropTypes from "prop-types";
-import { ingredientPropTypes } from '../../utils/prop-types';
+import { useSelector } from 'react-redux';
+import { getCurrentIngredient } from '../../utils/constants';
 
-const IngredientDetails = ({ingredient}) => {
+const IngredientDetails = () => {
+  const ingredient = useSelector(getCurrentIngredient);
   const {name, image, proteins, carbohydrates, fat, calories} = ingredient;
   return (
     <div className={styles.content}>
@@ -20,10 +21,6 @@ const IngredientDetails = ({ingredient}) => {
       </div>
     </div>
   );
-}
-
-IngredientDetails.propTypes = {
-  ingredient: ingredientPropTypes.isRequired
 }
 
 export default IngredientDetails;

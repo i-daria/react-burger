@@ -1,19 +1,42 @@
-import React, { useContext } from 'react';
+import React from 'react';
 import styles from './burger-constructor.module.css';
-import {ConstructorElement, CurrencyIcon, Button, DragIcon} from '@ya.praktikum/react-developer-burger-ui-components';
+import {ConstructorElement, Button} from '@ya.praktikum/react-developer-burger-ui-components';
+import BurgerConstructorIngredient from '../burger-constructor-ingredient/burger-constructor-ingredient';
 import Modal from '../modal/modal';
 import OrderDetails from '../order-details/order-details';
 import currency from '../../images/icon36.svg';
-import { cartContext } from '../../services/cartContext.js';
-import { orderContext } from '../../services/orderContext';
-import { postOrder } from '../../utils/api';
+import { useDispatch, useSelector } from 'react-redux';
+import { postOrderToServer } from '../../utils/api';
+import { useDrop} from 'react-dnd';
+import { ADD_INGREDIENT, ADD_BUN, CLEAR_INGREDIENTS } from '../../services/actions/ingredients';
+import {POST_ORDER_REQUEST, POST_ORDER_SUCCESS, POST_ORDER_ERROR} from '../../services/actions/order';
+import { v4 as uuid } from 'uuid';
+import { getSelectedIngredients } from '../../utils/constants'; 
 
 const BurgerConstructor = () => {
-  const cart = useContext(cartContext);  
-  const [order, setOrder] = React.useState({'number': null, 'name': '', 'ingredients':[]});  
-  const fillings = cart.ingredients;
-  const defaultBuns = cart.bun;
-  const total = cart.total;
+  const dispatch = useDispatch();
+  const [, dropTarget] = useDrop({
+    accept: 'ingredient',
+    drop: (item) => {  
+      if (item.type === 'bun'){
+        dispatch({
+          type: ADD_BUN,
+          data: item
+        });
+      } else {
+        dispatch({
+          type: ADD_INGREDIENT,
+          data: {...item,
+          id: uuid()}
+        });
+      }
+    }
+  });
+
+  const selectedIngredients = useSelector(getSelectedIngredients);
+  const fillings = selectedIngredients.ingredients;
+  const buns = selectedIngredients.bun;
+  const total = React.useMemo(() => buns.price * 2 + fillings.reduce((total, item) => total + item.price, 0), [buns, fillings]);
   
   const [orderModal, setOrderModal] = React.useState(false); //показать попап оформления заказа
   const showOrderModal = ()  => {
@@ -25,45 +48,56 @@ const BurgerConstructor = () => {
   };
 
   const onPostOrder = () => { 
-    postOrder([defaultBuns, ...fillings])
-    .then(res => res.success === true ? setOrder({'number': res.order.number, 'name': res.name, 'ingredients':[defaultBuns, ...fillings]}) : console.log(res))
-    .catch(error => console.log(error));
+    dispatch({
+      type: POST_ORDER_REQUEST, 
+    });
+    postOrderToServer([buns, ...fillings])
+    .then(res => {
+      if (res.success === true) {
+        dispatch({
+          type: POST_ORDER_SUCCESS,
+          name: res.name,
+          number: res.order.number,
+        });
+        dispatch({
+          type: CLEAR_INGREDIENTS,
+        })
+      } else {
+        console.log(res)
+      }
+    })
+    .catch(error => dispatch({
+      type: POST_ORDER_ERROR})
+    );
 
     showOrderModal();
-  }
+  };
 
   return (
     <>
-      { defaultBuns &&
+      { buns &&
       <section className={styles.section}>
         <div className={styles.structure}>
           <ConstructorElement
             type="top"
             isLocked={true}
-            text={`${defaultBuns.name} (верх)`}
-            price={defaultBuns.price}
-            thumbnail={defaultBuns.image}
+            text={`${buns.name} (верх)`}
+            price={buns.price}
+            thumbnail={buns.image}
           />
-          <ul className={styles.list}>
-            {fillings.map((item) => {
+          <ul className={styles.list} ref={dropTarget}>
+            {fillings.map((item, index) => {
               return (
-                <li key={item._id} className={styles.item}>
-                  <DragIcon/>        
-                  <ConstructorElement
-                    text={item.name}
-                    price={item.price}
-                    thumbnail={item.image}
-                  />
-                </li>
+                <BurgerConstructorIngredient  key={item.id} ingredient={item} index={index}/>
               )
             })}
           </ul>
           <ConstructorElement
             type="bottom"
             isLocked={true}
-            text={`${defaultBuns.name} (низ)`}
-            price={defaultBuns.price}
-            thumbnail={defaultBuns.image}
+            text={`${buns.name} (низ)`}
+            price={buns.price}
+            thumbnail={buns.image}
           />
         </div>
         <div className={styles.totalWrapper}>
@@ -79,13 +113,11 @@ const BurgerConstructor = () => {
       }
       { orderModal &&
         <Modal onClose={onCloseModal}>
-          <orderContext.Provider value={order}>
             <OrderDetails />
-          </orderContext.Provider>
         </Modal>
       }
     </>
   );
 }
 
-export default BurgerConstructor;
+export default React.memo(BurgerConstructor);

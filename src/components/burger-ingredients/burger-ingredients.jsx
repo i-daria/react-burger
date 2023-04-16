@@ -1,17 +1,22 @@
-import React, { useContext } from 'react';
+import React from 'react';
 import styles from './burger-ingredients.module.css';
 import {Tab} from '@ya.praktikum/react-developer-burger-ui-components';
 import IngredientCategory from '../ingredient-category/ingredient-category';
 import Modal from '../modal/modal';
 import IngredientDetails from '../ingredient-details/ingredient-details';
-import { allIngredientsContext } from '../../services/allIngredientsContext';
+import { useDispatch, useSelector } from 'react-redux';
+import {RESET_CURRENT_INGREDIENT } from '../../services/actions/ingredients';
+import { CLOSE_MODAL } from '../../services/actions/modal';
+import { getIngredients, getModalIsOpen } from '../../utils/constants';
 
 const BurgerIngredients = () => { 
+  const dispatch = useDispatch();
   const [currentTab, setCurrentTab] = React.useState('buns');
-  const ingredients = useContext(allIngredientsContext);
+  const ingredients = useSelector(getIngredients); 
   const buns = ingredients.filter((item) => item.type === 'bun');
   const sauces = ingredients.filter((item) => item.type === 'sauce'); 
   const mains = ingredients.filter((item) => item.type === 'main'); 
+  const modalIsOpen = useSelector(getModalIsOpen);
   
   const handlerClick = (tab) => {
     setCurrentTab(tab);    
@@ -21,10 +26,30 @@ const BurgerIngredients = () => {
     } 
   }
 
-  const [modalData, setModalData] = React.useState(null);
   const closeModal = () => {
-    setModalData(null);
+    dispatch({type: RESET_CURRENT_INGREDIENT});
+    dispatch({type: CLOSE_MODAL});
   };
+
+// настройки
+const options = {
+  threshold: 0.55
+};
+// функция обратного вызова
+const callback = function(entries, observer){
+  entries.forEach(entry => {    
+    if(entry.isIntersecting && entry.intersectionRatio >= 0.55) {
+      setCurrentTab(entry.target.id);
+    }
+  });
+};
+// наблюдатель
+const observer = new IntersectionObserver(callback, options);
+const targets = document.querySelectorAll('.category-title');
+targets.forEach(target => {
+  observer.observe(target);
+});
+
 
   return (
     <>
@@ -40,17 +65,15 @@ const BurgerIngredients = () => {
             Начинки
           </Tab>      
         </nav>
-        <div className={styles.content}>
-          <IngredientCategory id='buns' title='Булки' items={buns} onItemClick = {setModalData}/>
-          <IngredientCategory id='sauces' title='Соусы' items={sauces} onItemClick = {setModalData}/>        
-          <IngredientCategory id='mains' title='Начинки' items={mains} onItemClick = {setModalData}/>
+        <div className={styles.content} id="scrollBlock">
+          <IngredientCategory id='buns' title='Булки' items={buns} />
+          <IngredientCategory id='sauces' title='Соусы' items={sauces} />        
+          <IngredientCategory id='mains' title='Начинки' items={mains} />
         </div>
       </section>   
-      { modalData &&
+      { modalIsOpen &&
       <Modal title='Детали ингредиента' onClose={closeModal}>
-        <IngredientDetails 
-          ingredient={modalData}
-        />
+        <IngredientDetails />
       </Modal>
       }
     </> 

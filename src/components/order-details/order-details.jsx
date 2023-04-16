@@ -1,10 +1,10 @@
 import styles from './order-details.module.css';
 import doneImg from '../../images/done.png';
-import { orderContext } from '../../services/orderContext';
-import { useContext } from 'react';
+import { useSelector } from 'react-redux';
+import { getOrder } from '../../utils/constants';
 
 function OrderDetails() {
-  const order = useContext(orderContext);
+  const order = useSelector(getOrder);
   return (
     <div className={styles.content}>
       <h1 className={`${styles.heading} mt-9 mb-8`}> {order.number} </h1>
