@@ -16,7 +16,10 @@ export const getBurgerIngredients = () => request("ingredients");
 export const postOrderToServer = (ingredients) => request("orders", {
   method: 'POST',
   body: JSON.stringify({ingredients: ingredients.map(elem => elem._id)}),
-  headers: {'Content-Type': 'application/json'}
+  headers: {
+    'Content-Type': 'application/json',
+    'Authorization': 'Bearer ' + getCookie('accessToken')
+  }
 });
 
 // profile: 

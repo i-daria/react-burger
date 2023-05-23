@@ -33,6 +33,7 @@ export const ResetPassword = () => {
             value= {newPassword}
             name={'password'}
             extraClass="mb-2"
+            required
           />
         </div>
         <div className={styles.input}>
@@ -46,6 +47,7 @@ export const ResetPassword = () => {
             errorText={'Ошибка'}
             size={'default'}
             extraClass="ml-1"
+            required
           />
         </div>
         <div className={styles.button}>

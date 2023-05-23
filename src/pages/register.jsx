@@ -37,6 +37,7 @@ export const Register = () => {
           errorText={'Ошибка'}
           size={'default'}
           extraClass="ml-1"
+          required
         />
         </div>
         <div className={styles.input}>
@@ -45,6 +46,7 @@ export const Register = () => {
             onChange={e => setEmail(e.target.value)}
             value={email}
             isIcon={false}
+            required
           />
         </div>
         <div className={styles.input}>
@@ -53,6 +55,7 @@ export const Register = () => {
             onChange={e => setPassword(e.target.value)}
             value={password} 
             extraClass="mb-2"
+            required
           />
         </div>
         <div className={styles.button}>

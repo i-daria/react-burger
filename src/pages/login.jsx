@@ -18,7 +18,6 @@ export const Login = () => {
   const refreshToken = getCookie('refreshToken');
 
   useEffect(() => {
-    console.log('после out' + isLogin);
     if (isLogin) {
       navigate(from);
     } else if (accessToken) {
@@ -42,6 +41,7 @@ export const Login = () => {
             value={email}
             name={'email'}
             isIcon={false}
+            required
           />
         </div>
         <div className={styles.input}>
@@ -50,6 +50,7 @@ export const Login = () => {
             value={password}
             name={'password'}
             extraClass="mb-2"
+            required
           />
         </div>
         <div className={styles.button}>

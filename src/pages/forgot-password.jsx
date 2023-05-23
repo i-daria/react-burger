@@ -40,6 +40,7 @@ export const ForgotPassword = () => {
             value= {email}
             name={'email'}
             isIcon={false}
+            required
           />
         </div>
         <div className={styles.button}>

@@ -29,3 +29,7 @@
 .active {
   color: #F2F2F3;
 }
+
+.secondaryText {
+  opacity: 0.4
+}

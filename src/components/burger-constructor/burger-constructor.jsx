@@ -51,13 +51,15 @@ const BurgerConstructor = () => {
   };
 
   const onPostOrder = () => { 
-    if (!isLogin) {navigate('/login');} else {    
+    if (!isLogin) {
+      navigate('/login');
+    } else {    
       dispatch({
         type: POST_ORDER_REQUEST, 
       });
-      postOrderToServer([buns, ...fillings])
+      postOrderToServer([buns, ...fillings, buns])
       .then(res => {
-        if (res.success === true) {
+        if (res.success) {
           dispatch({
             type: POST_ORDER_SUCCESS,
             name: res.name,
