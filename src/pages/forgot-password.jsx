@@ -2,8 +2,10 @@ import {EmailInput, Button} from '@ya.praktikum/react-developer-burger-ui-compon
 import React from 'react';
 import styles from './form.module.css';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { forgotPassword } from '../utils/api';
+import { getCookie } from '../utils/cookie';
+import { getUserInformation } from '../services/actions/profile';
 
 export const ForgotPassword = () => {  
   const [email, setEmail] = React.useState('');
@@ -11,6 +13,8 @@ export const ForgotPassword = () => {
   const navigate  = useNavigate();
   const { state } = useLocation();
   const from = state?.from || '/';
+  const dispatch = useDispatch();
+  const accessToken = getCookie('accessToken');
   
   const onSubmitForm = (e) => {    
     e.preventDefault();
@@ -25,9 +29,11 @@ export const ForgotPassword = () => {
 
   React.useEffect(() => {
     if (isLogin) {
-      navigate(from);
-    } 
-  }, [isLogin, navigate, from]);
+      navigate(from, {replace:true});
+    } else if (accessToken) {
+      dispatch(getUserInformation());
+    }
+  }, [isLogin, accessToken, dispatch, from, navigate]);
 
   return (
     <div className={styles.container}>

@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { EmailInput, PasswordInput, Button } from '@ya.praktikum/react-developer-burger-ui-components';
 import styles from './form.module.css';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
@@ -15,15 +15,14 @@ export const Login = () => {
   const { state } = useLocation();
   const from = state?.from || '/';
   const accessToken = getCookie('accessToken');
-  const refreshToken = getCookie('refreshToken');
 
-  useEffect(() => {
+  React.useEffect(() => {
     if (isLogin) {
-      navigate(from);
+      navigate(from, {replace:true});
     } else if (accessToken) {
       dispatch(getUserInformation());
     }
-  }, [isLogin, accessToken, dispatch, from, navigate, refreshToken]);
+  }, [isLogin, accessToken, dispatch, from, navigate]);
 
   const onSubmitForm = (e) => {
     e.preventDefault();

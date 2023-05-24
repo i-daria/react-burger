@@ -4,6 +4,8 @@ import styles from './form.module.css';
 import { Link, useNavigate } from 'react-router-dom';
 import { registerUser } from '../services/actions/profile';
 import { useDispatch, useSelector } from 'react-redux';
+import { getCookie } from '../utils/cookie';
+import { getUserInformation } from '../services/actions/profile';
 
 export const Register = () => {
   const [name, setName] = React.useState('');
@@ -12,6 +14,7 @@ export const Register = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const isLogin = useSelector(store => store.profile.isLogin);
+  const accessToken = getCookie('accessToken');
 
   const onFormSubmit = (e) => {
     e.preventDefault();
@@ -19,8 +22,13 @@ export const Register = () => {
   };
 
   React.useEffect(() => {
-    if (isLogin) navigate('/', { replace: true });
-  }, [isLogin, navigate]);
+    if (isLogin) {
+      navigate('/', {replace:true});
+    } else if (accessToken) {
+      dispatch(getUserInformation());
+    }
+  }, [isLogin, accessToken, dispatch, navigate]);
+
 
   return (
     <div className={styles.container}>

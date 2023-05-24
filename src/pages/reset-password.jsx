@@ -3,6 +3,9 @@ import styles from './form.module.css';
 import { Link, Navigate, useLocation, useNavigate } from 'react-router-dom';
 import React from 'react';
 import { resetPassword } from '../utils/api';
+import { useDispatch, useSelector } from 'react-redux';
+import { getCookie } from '../utils/cookie';
+import { getUserInformation } from '../services/actions/profile';
 
 export const ResetPassword = () => {
   const [newPassword, setNewPassword] = React.useState('');  
@@ -10,6 +13,9 @@ export const ResetPassword = () => {
   const { state } = useLocation();
   const from = state?.from || '/';
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const isLogin = useSelector(store => store.profile.isLogin);
+  const accessToken = getCookie('accessToken');
 
   const onFormSubmit = (e) => {
     e.preventDefault();
@@ -18,9 +24,15 @@ export const ResetPassword = () => {
     resetPassword(formData)
       .then (res => {if (res && res.success) navigate('/login')})
       .catch(err => {if (err === 'Ошибка: 404') alert(err + ': Введен неправильный проверочный код')});
-    
-    console.log(formData);
   };
+
+  React.useEffect(() => {
+    if (isLogin) {
+      navigate('/', {replace:true});
+    } else if (accessToken) {
+      dispatch(getUserInformation());
+    }
+  }, [isLogin, accessToken, dispatch, navigate]);
 
   return from !== '/forgot-password' ? <Navigate to='/login' replace='true' />  : (
     <div className={styles.container}>

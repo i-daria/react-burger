@@ -2,7 +2,7 @@ import styles from './form.module.css';
 import stylesProfile from './profile.module.css';
 import { NavLink, useNavigate } from 'react-router-dom';
 import {EmailInput, PasswordInput, Input, Button} from '@ya.praktikum/react-developer-burger-ui-components';
-import { getUserInformation, logoutUser, updateUserInformation } from '../services/actions/profile';
+import { logoutUser, updateUserInformation } from '../services/actions/profile';
 import { useDispatch, useSelector } from 'react-redux';
 import React from 'react';
 
@@ -44,11 +44,6 @@ export const Profile = () => {
       default: console.log('none');
     }
   };
-
-  React.useEffect(() => {
-    dispatch(getUserInformation());
-  }, [dispatch]);
-
 
   return (
     <div className={stylesProfile.container}>
