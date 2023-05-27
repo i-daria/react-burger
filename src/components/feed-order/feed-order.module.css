@@ -33,8 +33,8 @@
   display: flex;
   flex-direction: row-reverse;
   flex-wrap: wrap;
-  max-width: 305px;
-  max-height: 64px;
+  gap: 8px 0;
+  max-width: 284px;
   margin: 0;
   padding: 0;
   list-style: none;
@@ -68,10 +68,22 @@
   border-radius: 100%;
 }
 
-/* ПЕРЕДЕЛАТЬ НА СПАН!!!! */
-.ingredient_last:first-of-type::after { 
-  content: '+3';
+.ingredient_last_background::after {
+  content: '';
   position: absolute;
+  width: 60px;
+  height: 60px;
+  box-sizing: border-box;
+  top: 2px;
+  left: 2px;
+  background-color: rgba(28, 28, 33, 0.6);
+  border-radius: 100%;
+}
+
+.show_more_text { 
+  position: absolute;
+  z-index: 10;
+  display: block;
   width: 60px;
   height: 60px;
   box-sizing: border-box;
@@ -82,7 +94,6 @@
   color: #F2F2F3;;
   font-size: 16px;
   line-height: 1.5;
-  background-color: rgba(28, 28, 33, 0.6);
   border-radius: 100%;
 }
 
