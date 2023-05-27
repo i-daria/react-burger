@@ -1,0 +1,66 @@
+.wrapper {
+  display: flex;
+  justify-content: center;
+  gap: 40px;
+  width: 100%;
+}
+
+.ordersContainer,
+.statusContainer {  
+  width: 100%;
+  max-width: 600px;
+}
+
+.statusContainer { 
+  display: flex;
+  flex-direction: column;
+  gap: 60px;
+}
+
+.ordersContainer {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin: 0;
+  margin-bottom: 40px;
+  padding: 0;
+  padding-right: 8px;
+  max-height: 70vh;
+  overflow-y: scroll;
+}
+
+.ordersStatus {
+  display: flex;
+  gap: 36px;
+}
+
+.ordersStatusList {
+  width: 50%;
+}
+
+.ready,
+.inWork {
+  display: flex;
+  flex-direction: column;
+  flex-wrap: wrap;
+  list-style: none;
+  max-height: 305px;
+  margin: 0;
+  padding: 0;
+  font-family: 'Iceland';
+  font-style: normal;
+  font-weight: 400;
+  font-size: 28px;
+  line-height: 0.86;
+}
+
+.ready > li,
+.inWork > li {
+  margin: 0;
+  margin-bottom: 6px;
+}
+
+.ready > li {  
+  color: #00CCCC;
+}

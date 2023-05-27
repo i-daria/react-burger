@@ -1,18 +1,19 @@
 import stylesProfile from './profile.module.css';
-import {NavLink} from 'react-router-dom';
+import styles from './orders.module.css';
+import { ProfileNav } from '../components/profile-nav/profile-nav';
+import { FeedOrder } from '../components/feed-order/feed-order';
 
 export const Orders = () => {
   return (
     <div className={stylesProfile.container}>
-      <div className={stylesProfile.nav}>
-        <NavLink to='/profile' className={({ isActive }) => isActive ? `${stylesProfile.link} ${stylesProfile.active}` : stylesProfile.link} end>
-          Профиль
-        </NavLink>
-        <NavLink to='/profile/orders' className={({ isActive }) => isActive ? `${stylesProfile.link} ${stylesProfile.active}` : stylesProfile.link} end>История заказов</NavLink>
-        <NavLink to='/login' className={({ isActive }) => isActive ? `${stylesProfile.link} ${stylesProfile.active}` : stylesProfile.link}>Выход</NavLink>
-      
-        <div className={`text text_type_main-default text_color_inactive mt-20 ${stylesProfile.secondaryText}`} > В этом разделе вы можете изменить свои персональные данные</div>
-      </div>
+      <ProfileNav />
+      <div className={styles.ordersContainer}>       
+          <FeedOrder />
+          <FeedOrder />
+          <FeedOrder />
+          <FeedOrder />
+          <FeedOrder />
+        </div>
     </div>
   );
 }

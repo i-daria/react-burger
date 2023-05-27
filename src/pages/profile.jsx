@@ -1,14 +1,13 @@
 import styles from './form.module.css';
 import stylesProfile from './profile.module.css';
-import { NavLink, useNavigate } from 'react-router-dom';
 import {EmailInput, PasswordInput, Input, Button} from '@ya.praktikum/react-developer-burger-ui-components';
-import { logoutUser, updateUserInformation } from '../services/actions/profile';
+import { updateUserInformation } from '../services/actions/profile';
 import { useDispatch, useSelector } from 'react-redux';
 import React from 'react';
+import { ProfileNav } from '../components/profile-nav/profile-nav';
 
 export const Profile = () => {
   const dispatch = useDispatch();
-  const navigate = useNavigate();
   const user = useSelector(store => store.profile.user); 
   const [password, setPassword] = React.useState('');
   const [newName, setNewName] = React.useState(user.name || '');  
@@ -30,11 +29,6 @@ export const Profile = () => {
     setIsEdit(false);
   }
 
-  const onLogout = () => {
-    dispatch(logoutUser());
-    navigate('/login', {replace: true});
-  };
-
   const onChange = (e) => {
     setIsEdit(true);
     switch(e.target.name) {
@@ -47,15 +41,7 @@ export const Profile = () => {
 
   return (
     <div className={stylesProfile.container}>
-      <div className={stylesProfile.nav}>
-        <NavLink to='/profile' className={({ isActive }) => isActive ? `${stylesProfile.link} ${stylesProfile.active}` : stylesProfile.link}>
-          Профиль
-        </NavLink>
-        <NavLink to='/profile/orders' className={({ isActive }) => isActive ? `${stylesProfile.link} ${stylesProfile.active}` : stylesProfile.link}>История заказов</NavLink>
-        <NavLink className={stylesProfile.link}  onClick={onLogout} >Выход</NavLink>
-      
-        <div className={`text text_type_main-default text_color_inactive mt-20 ${stylesProfile.secondaryText}`}>В этом разделе вы можете изменить свои персональные данные</div>
-      </div>
+      < ProfileNav/>
 
       <form onSubmit={onFormSubmit} className={styles.form}>
         <div className={styles.input}>

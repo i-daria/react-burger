@@ -1,0 +1,30 @@
+.content {
+  width: 640px;
+  margin: 0 auto;
+  margin-top: 120px;
+}
+
+.number {
+  text-align: center;
+}
+
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  max-height: 315px;
+  padding: 0;
+  margin: 0;
+  margin-bottom: 40px;
+  list-style: none;
+}
+
+.footer {
+  display: flex;
+  justify-content: space-between;
+}
+
+.total {  
+  display: flex;
+  gap: 8px;
+}

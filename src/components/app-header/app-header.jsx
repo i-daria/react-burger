@@ -11,15 +11,15 @@ function AppHeader() {
           <BurgerIcon type={pathname === "/" ? "primary" : "secondary"} />
           Конструктор
         </NavLink>
-        <NavLink to="/profile/orders" end className={({ isActive }) => isActive ? `text text_type_main-default pr-5 ${styles.link}` : `text text_type_main-default pr-5 ${styles.link} ${styles.link_color_dark}`}>
-          <ListIcon type={pathname === "/profile/orders" ? "primary" : "secondary"} />
+        <NavLink to="/feed" end className={({ isActive }) => isActive ? `text text_type_main-default pr-5 ${styles.link}` : `text text_type_main-default pr-5 ${styles.link} ${styles.link_color_dark}`}>
+          <ListIcon type={pathname === "/feed" ? "primary" : "secondary"} />
           Лента заказов
         </NavLink>
         <div className={styles.logo}>
           <Logo />
         </div>
-        <NavLink to="/profile" end className={({ isActive }) => isActive ? `text text_type_main-default pl-5 ${styles.link}` : `text text_type_main-default pl-5 ${styles.link} ${styles.link_color_dark}`}>
-          <ProfileIcon type={pathname === "/profile" ? "primary" : "secondary"}  />
+        <NavLink to="/profile/orders" end className={({ isActive }) => isActive ? `text text_type_main-default pl-5 ${styles.link}` : `text text_type_main-default pl-5 ${styles.link} ${styles.link_color_dark}`}>
+          <ProfileIcon type={pathname === "/profile/orders" ? "primary" : "secondary"}  />
           Личный кабинет
         </NavLink>
       </div>
