@@ -8,7 +8,7 @@ export const Feed = () => {
   const dispatch = useDispatch();
   const {data, get} = useSelector(store => store.ws);
   
-  const orders = get ? data.orders.slice(0, 40) : []; //???  фильтр на пустые значения?
+  const orders = get ? data.orders.slice(0, 40) : []; 
   
   const total = get ? data.total : 0;
   const totalToday = get? data.totalToday : 0;

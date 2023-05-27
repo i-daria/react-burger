@@ -23,8 +23,6 @@ export const Order = () => {
   const total = orderIngredients ? orderIngredients.reduce((acc, item) => acc + item.price , 0) : 0;
   const filteredIngredients = orderIngredients ? Array.from(new Set(orderIngredients.map(obj => obj))) : null; //ОТФИЛЬТРОВАТЬ УНИКАЛЬНЫЕ
 
-  console.log(filteredIngredients);
-
   React.useEffect (() => {
     if (location.pathname.includes('profile') && token) {      
       dispatch({type: WS_CONNECTION_START_AUTH});

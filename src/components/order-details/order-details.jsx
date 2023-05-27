@@ -5,13 +5,18 @@ import { getOrder } from '../../utils/constants';
 
 function OrderDetails() {
   const order = useSelector(getOrder);
+  const isOrderRequest = useSelector(store => store.order.isOrderRequest);
   return (
     <div className={styles.content}>
-      <h1 className={`${styles.heading} mt-9 mb-8`}> {order.number} </h1>
-      <p className='text text_type_main-medium mb-15'>идентификатор заказа</p>      
-      <img src={doneImg} alt='заказ оформлен' className={styles.img} />
-      <p className='text text_type_main-default mb-2'>Ваш заказ начали готовить</p>
-      <p className='text text_type_main-default text_color_inactive mb-20'>Дождитесь готовности на орбитальной станции</p>
+      {isOrderRequest ? <h1 className='text text_type_main-medium mb-15'> Loading...</h1> : (
+      <>
+        <h1 className={`${styles.heading} mt-9 mb-8`}>{order.number}</h1>
+        <p className='text text_type_main-medium mb-15'>идентификатор заказа</p>      
+        <img src={doneImg} alt='заказ оформлен' className={styles.img} />
+        <p className='text text_type_main-default mb-2'>Ваш заказ начали готовить</p>
+        <p className='text text_type_main-default text_color_inactive mb-20'>Дождитесь готовности на орбитальной станции</p>
+      </>
+      )}
     </div>
   );
 }
