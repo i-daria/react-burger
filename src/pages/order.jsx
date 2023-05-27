@@ -1,71 +1,66 @@
-import {  ConstructorElement, CurrencyIcon,  FormattedDate } from '@ya.praktikum/react-developer-burger-ui-components';
+import React from 'react';
+import {  CurrencyIcon,  FormattedDate } from '@ya.praktikum/react-developer-burger-ui-components';
+import { useDispatch, useSelector } from 'react-redux';
+import { useLocation, useParams } from 'react-router';
 import { getOrderStatus, isDone } from "../utils/order";
 import styles from './order.module.css';
+import { WS_CONNECTION_START, WS_CONNECTION_START_AUTH, WS_CONNECTION_CLOSED } from '../services/actions/ws-action-types';
+import { getCookie } from '../utils/cookie';
 
 export const Order = () => {
+  const location = useLocation();
+  const dispatch = useDispatch();
+  const token = getCookie('refreshToken');
 
-  //НАПИСАТЬ ФУНКЦИЮ ПОЛУЧЕНИЯ ДАННЫХ ЗАКАЗА ЛИБО ДОБАВИТЬ ИНФУ ТЕКУЩИЙ ЗАКАЗ В ПОПАП GetCurrentOrderInfo(id)????;
-  //Заменить на реальные
-  const order = {
-    ingredients : [
-      "60d3463f7034a000269f45e7",
-      "60d3463f7034a000269f45e9",
-      "60d3463f7034a000269f45e8",
-      "60d3463f7034a000269f45ea"
-    ],
-    _id : "304535",
-    name: "Черный метеорит",
-    status : "done",
-    number: 304535,
-    createdAt: "2021-06-23T14:43:22.587Z",
-    updatedAt: "2021-06-23T14:43:22.603Z"
-  };
+  const { id } = useParams();
+  const wsStore = useSelector(store => store.ws);
+  const order = wsStore.get ? wsStore.data.orders.find(el => el._id === id) : null;  
+  const allIngredients = useSelector(store => store.ingredients.ingredients) 
+  const orderIngredients = order ? order.ingredients.map(ingredient => {
+    const item = allIngredients.find(el => el._id === ingredient);
+    return item;
+  }) : null;  
+  const total = orderIngredients ? orderIngredients.reduce((acc, item) => acc + item.price , 0) : 0;
+  const filteredIngredients = orderIngredients ? Array.from(new Set(orderIngredients.map(obj => obj))) : null; //ОТФИЛЬТРОВАТЬ УНИКАЛЬНЫЕ
 
-  // ЗАМЕНИНИТЬ НА РЕАЛ ДАННЫЕ
-  const item = {
-    calories: 14,
-    carbohydrates: 11,
-    fat: 22,
-    id: "c34ed7f0-89f7-4cbf-b7c9-85481ec91309",
-    image: "https://code.s3.yandex.net/react/code/sauce-04.png",
-    name: "Соус фирменный Space Sauce",
-    price: 80,
-    proteins: 50,
-    type: "sauce",
-    _id: "643d69a5c3f7b9001cfa0943"    
-  };
+  console.log(filteredIngredients);
 
-  
-  const total = 111; //посчитать сумму $ по товарам
+  React.useEffect (() => {
+    if (location.pathname.includes('profile') && token) {      
+      dispatch({type: WS_CONNECTION_START_AUTH});
+    } else {
+      dispatch({type: WS_CONNECTION_START});
+    }
 
-  return (
-    <div className={styles.content}>
+    return () => {
+      dispatch({ type: WS_CONNECTION_CLOSED });
+    }
+  }, [dispatch, location.pathname, token]);
+
+  return orderIngredients && (
+    <div className={`${styles.content} ${location.state && location.state.background ? styles.content_in_modal : ''}`}>
       <p className={`text text_type_digits-default mb-10 ${styles.number}`}>{`#${order.number}`}</p>
       <h1 className={`text text_type_main-medium mb-3`}>{order.name}</h1>   
       <p className='text text_type_main-default mb-15' style={isDone(order.status)}>{getOrderStatus(order.status)}</p>
       <h2 className={`text text_type_main-medium mb-6`}>Состав:</h2>
       <ul className={styles.list}>
-        <li>          
-          <ConstructorElement
-            text={item.name}
-            price={item.price}
-            thumbnail={item.image} 
-          />
-        </li>
-        <li>          
-          <ConstructorElement
-            text={item.name}
-            price={item.price}
-            thumbnail={item.image} 
-          />
-        </li>
-        <li>          
-          <ConstructorElement
-            text={item.name}
-            price={item.price}
-            thumbnail={item.image} 
-          />
-        </li>
+        {filteredIngredients.map((item, index) => {
+          const count = orderIngredients.filter(el => el._id === item._id);
+
+          return (
+            <li key={index} className={styles.ingredient} >     
+              <div className={styles.img_container}>
+                <img className={styles.img} src={item.image} alt={item.name}  /> 
+              </div>
+                <p className="text text_type_main-default">{item.name}</p>
+                <p className={`${styles.price} text text_type_digits-default`}>{count.length} x {item.price}</p>
+                <div className={styles}>
+                  <CurrencyIcon />
+                </div>
+            </li>
+          );
+        }
+        )}
       </ul>
       <div className={styles.footer}>
         <FormattedDate date={new Date(order.createdAt)} className='text text_type_main-default text_color_inactive' />

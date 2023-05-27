@@ -1,14 +1,14 @@
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { FeedOrder } from '../components/feed-order/feed-order';
-import { WS_CONNECTION_START } from '../services/actions/ws-action-types';
+import { WS_CONNECTION_START, WS_CONNECTION_CLOSED } from '../services/actions/ws-action-types';
 import styles from './feed.module.css';
 
 export const Feed = () => {
   const dispatch = useDispatch();
   const {data, get} = useSelector(store => store.ws);
   
-  const orders = get ? data.orders.slice(0, 20) : []; //???  фильтр на пустые значения?
+  const orders = get ? data.orders.slice(0, 40) : []; //???  фильтр на пустые значения?
   
   const total = get ? data.total : 0;
   const totalToday = get? data.totalToday : 0;
@@ -17,6 +17,10 @@ export const Feed = () => {
   
   React.useEffect (() => {
     dispatch({type: WS_CONNECTION_START});
+
+    return () => {
+      dispatch({ type: WS_CONNECTION_CLOSED });
+    }
   }, [dispatch]);
 
   return get && (
@@ -37,29 +41,19 @@ export const Feed = () => {
               <div className={styles.ordersStatusList}>
                 <p className='mb-6 text text_type_main-medium'>Готовы:</p>
                 <ul className={styles.ready}>
-                  <li> 122222 </li>
-                  <li> 122222 </li>
-                  <li> 122222 </li>
-                  <li> 122222 </li>
-                  <li> 122222 </li>
-                  <li> 122222 </li>
-                  <li> 122222 </li>
-                  <li> 122222 </li>
-                  <li> 444444 </li>
-                  <li> 444444 </li>
-                  <li> 444444 </li>
-                  <li> 444444 </li>
-                  <li> 444444 </li>
+                  {readyOrders.length > 0  && readyOrders.map ((order, index) => {
+                    return( <li key={index}>{order}</li> );
+                  }
+                  )}
                 </ul>
               </div>
               <div className={styles.ordersStatusList}>
                 <p className='mb-6 text text_type_main-medium'>В работе:</p>
                 <ul className={styles.inWork}>
-                  <li> 122222 </li>
-                  <li> 122222 </li>
-                  <li> 122222 </li>
-                  <li> 122222 </li>
-                  <li> 122222 </li>
+                  {inWorkOrders.length > 0  && inWorkOrders.map ((order, index) => {
+                    return( <li key={index}>{order}</li> );
+                  }
+                  )}
                 </ul>
               </div>
             </div>

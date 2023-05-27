@@ -4,6 +4,10 @@
   margin-top: 120px;
 }
 
+.content_in_modal {
+  margin-top: 0;
+}
+
 .number {
   text-align: center;
 }
@@ -14,9 +18,11 @@
   gap: 16px;
   max-height: 315px;
   padding: 0;
+  padding-right: 16px;
   margin: 0;
   margin-bottom: 40px;
   list-style: none;
+  overflow-y: scroll;
 }
 
 .footer {
@@ -27,4 +33,42 @@
 .total {  
   display: flex;
   gap: 8px;
+}
+
+
+.img_container {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 64px;
+  height: 64px;
+  background: linear-gradient(63.18deg, #801ab3 0%, #4c4cff 100%);
+  border-radius: 100%;
+}
+
+.img_container::before {
+  content: '';
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 60px;
+  height: 60px;
+  background-color: #131316;
+  border-radius: 100%;
+}
+
+.img {  
+  position: absolute;
+  max-height: 56px;
+}
+
+.ingredient {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.price {
+  margin-left: auto;
 }

@@ -10,9 +10,9 @@ import { useSelector } from 'react-redux';
 
   const navigate = useNavigate();
   const location = useLocation();
-  const ingredientsData = useSelector(store => store.ingredients.ingredients) 
-  const ingredients = order.ingredients.map(ingredient => {
-    const item = ingredientsData.find(el => el._id === ingredient);
+  const allIngredients = useSelector(store => store.ingredients.ingredients) 
+  const orderIngredients = order.ingredients.map(ingredient => {
+    const item = allIngredients.find(el => el._id === ingredient);
     return item;
   });
 
@@ -20,14 +20,14 @@ import { useSelector } from 'react-redux';
   let moreCount = null;
   let moreCountList = [];
   const [showMore, setShowMore] = React.useState(false);
-  if (ingredients.length <= 6 ) {
-    ingredientsCount = ingredients.length;
+  if (orderIngredients.length <= 6 ) {
+    ingredientsCount = orderIngredients.length;
   } else {
-    moreCount = ingredients.length - 6; 
-    moreCountList = ingredients.slice(6);
+    moreCount = orderIngredients.length - 6; 
+    moreCountList = orderIngredients.slice(6);
   };
 
-  const total = ingredients.reduce((acc, item) => acc + item.price , 0);
+  const total = orderIngredients.reduce((acc, item) => acc + item.price , 0);
 
   const isVisible = location.pathname === '/profile/orders';
     
@@ -66,7 +66,7 @@ import { useSelector } from 'react-redux';
       </div>
       <div className={`${styles.content}`}>
         <ul className={styles.list}>
-          {ingredients.slice(0, ingredientsCount).map((ingredient, index) => {
+          {orderIngredients.slice(0, ingredientsCount).map((ingredient, index) => {
             return (
               <li className={`${styles.ingredient} ${moreCount && index === 0 ? styles.ingredient_last_background : ''}`} key={index}>
                 <img className={styles.img} src={ingredient.image} alt={ingredient.name}  />
