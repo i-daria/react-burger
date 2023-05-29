@@ -1,11 +1,11 @@
 import styles from './order-details.module.css';
 import doneImg from '../../images/done.png';
 import { useSelector } from 'react-redux';
-import { getOrder } from '../../utils/constants';
+import { getIsOrderRequest, getOrder } from '../../utils/constants';
 
 function OrderDetails() {
   const order = useSelector(getOrder);
-  const isOrderRequest = useSelector(store => store.order.isOrderRequest);
+  const isOrderRequest = useSelector(getIsOrderRequest);
   return (
     <div className={styles.content}>
       {isOrderRequest ? <h1 className='text text_type_main-medium mb-15'> Loading...</h1> : (

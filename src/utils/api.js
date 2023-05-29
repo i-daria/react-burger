@@ -1,5 +1,5 @@
 import { getCookie } from "./cookie"; 
-const BASE_URL = 'https://norma.nomoreparties.space/api/';
+import { BASE_URL } from "./constants"
 
 const checkResponse = (res) => {
   return res.ok ? res.json() : Promise.reject(`Ошибка: ${res.status}`);

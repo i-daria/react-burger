@@ -6,13 +6,14 @@ import { useSelector, useDispatch } from 'react-redux';
 import { forgotPassword } from '../utils/api';
 import { getCookie } from '../utils/cookie';
 import { getUserInformation } from '../services/actions/profile';
+import { FORGOT_PASSWORD_URL, getIsLogin, HOME_URL, LOGIN_URL, RESET_PASSWORD_URL } from '../utils/constants';
 
 export const ForgotPassword = () => {  
   const [email, setEmail] = React.useState('');
-  const isLogin = useSelector(store => store.profile.isLogin);
+  const isLogin = useSelector(getIsLogin);
   const navigate  = useNavigate();
   const { state } = useLocation();
-  const from = state?.from || '/';
+  const from = state?.from || HOME_URL;
   const dispatch = useDispatch();
   const accessToken = getCookie('accessToken');
   
@@ -21,7 +22,7 @@ export const ForgotPassword = () => {
     forgotPassword(e.target.email.value)
     .then(res => {
       if (res && res.success) {
-        navigate('/reset-password', { state: { from: '/forgot-password' } });
+        navigate(RESET_PASSWORD_URL, { state: { from: FORGOT_PASSWORD_URL } });
       }
     })
     .catch(err => console.log('err - ' + err));
@@ -52,7 +53,7 @@ export const ForgotPassword = () => {
         <div className={styles.button}>
           <Button htmlType="submit" type="primary" size="medium" >Восстановить</Button>
         </div>
-        <div className={styles.label}>Вспомнили пароль? <Link to='/login' className={styles.link}>Войти</Link></div>
+        <div className={styles.label}>Вспомнили пароль? <Link to={LOGIN_URL} className={styles.link}>Войти</Link></div>
       </form>
     </div>
   );

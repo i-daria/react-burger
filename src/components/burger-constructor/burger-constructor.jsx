@@ -11,8 +11,9 @@ import { useDrop} from 'react-dnd';
 import { ADD_INGREDIENT, ADD_BUN, CLEAR_INGREDIENTS } from '../../services/actions/ingredients';
 import {POST_ORDER_REQUEST, POST_ORDER_SUCCESS, POST_ORDER_ERROR} from '../../services/actions/order';
 import { v4 as uuid } from 'uuid';
-import { getSelectedIngredients } from '../../utils/constants'; 
+import { getIsLogin, getSelectedIngredients } from '../../utils/constants'; 
 import { useNavigate } from 'react-router';
+import { LOGIN_URL } from "../../utils/constants";
 
 const BurgerConstructor = () => {
   const dispatch = useDispatch();
@@ -38,7 +39,7 @@ const BurgerConstructor = () => {
   const fillings = selectedIngredients.ingredients;
   const buns = selectedIngredients.bun;
   const total = React.useMemo(() => buns.price * 2 + fillings.reduce((total, item) => total + item.price, 0), [buns, fillings]);  
-  const isLogin = useSelector(store => store.profile.isLogin);
+  const isLogin = useSelector(getIsLogin);
   const navigate = useNavigate();
   
   const [orderModal, setOrderModal] = React.useState(false); //показать попап оформления заказа
@@ -52,7 +53,7 @@ const BurgerConstructor = () => {
 
   const onPostOrder = () => { 
     if (!isLogin) {
-      navigate('/login');
+      navigate(LOGIN_URL);
     } else {    
       dispatch({
         type: POST_ORDER_REQUEST, 
@@ -69,7 +70,7 @@ const BurgerConstructor = () => {
             type: CLEAR_INGREDIENTS,
           })
         } else {
-          console.log(res)
+          alert('Не получилось оформить заказ. Ошибка:' + res);
         }
       })
       .catch(error => dispatch({

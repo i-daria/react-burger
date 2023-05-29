@@ -6,6 +6,7 @@ import { registerUser } from '../services/actions/profile';
 import { useDispatch, useSelector } from 'react-redux';
 import { getCookie } from '../utils/cookie';
 import { getUserInformation } from '../services/actions/profile';
+import { getIsLogin, HOME_URL, LOGIN_URL } from '../utils/constants';
 
 export const Register = () => {
   const [name, setName] = React.useState('');
@@ -13,7 +14,7 @@ export const Register = () => {
   const [password, setPassword] = React.useState('');
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const isLogin = useSelector(store => store.profile.isLogin);
+  const isLogin = useSelector(getIsLogin);
   const accessToken = getCookie('accessToken');
 
   const onFormSubmit = (e) => {
@@ -23,7 +24,7 @@ export const Register = () => {
 
   React.useEffect(() => {
     if (isLogin) {
-      navigate('/', {replace:true});
+      navigate(HOME_URL, {replace:true});
     } else if (accessToken) {
       dispatch(getUserInformation());
     }
@@ -70,7 +71,7 @@ export const Register = () => {
           <Button htmlType="submit" type="primary" size="medium">Зарегистрироваться</Button>
         </div>
       </form>
-      <div className={styles.label}>Уже зарегистрированы? <Link to='/login' className={styles.link}>Войти</Link></div>
+      <div className={styles.label}>Уже зарегистрированы? <Link to={LOGIN_URL} className={styles.link}>Войти</Link></div>
     </div>
   );
 };

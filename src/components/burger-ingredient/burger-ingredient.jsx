@@ -7,6 +7,7 @@ import { useDispatch } from 'react-redux';
 import {SET_CURRENT_INGREDIENT } from '../../services/actions/ingredients';
 import { useDrag } from 'react-dnd';
 import { useLocation, useNavigate } from 'react-router-dom';
+import { INGREDIENTS_URL } from '../../utils/constants';
 
 const BurgerIngredient = ({data, count}) => {
   const [, dragRef] = useDrag({
@@ -22,7 +23,7 @@ const BurgerIngredient = ({data, count}) => {
       type: SET_CURRENT_INGREDIENT,
       data: data
     });
-    navigate( `/ingredients/${_id}`, {state: {background: location}});
+    navigate( `${INGREDIENTS_URL}/${_id}`, {state: {background: location}});
   }
     
   return (

@@ -4,6 +4,7 @@ import { orderReducer } from './order';
 import { modalReducer } from './modal';
 import { profileReducer } from './profile'
 import { wsReducer } from './websoket';
+import { wsReducerAuth } from './websoket-auth';
 
 export const rootReducer = combineReducers({
   ingredients: ingredientsReducer,
@@ -11,5 +12,6 @@ export const rootReducer = combineReducers({
   modal: modalReducer,
   profile: profileReducer,
   ws: wsReducer,
+  wsAuth: wsReducerAuth,
 });
 

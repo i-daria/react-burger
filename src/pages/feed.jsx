@@ -1,12 +1,13 @@
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { FeedOrder } from '../components/feed-order/feed-order';
-import { WS_CONNECTION_START, WS_CONNECTION_CLOSED } from '../services/actions/ws-action-types';
+import { wsConnectionStart, wsConnectionClosed } from '../services/actions/ws-actions';
+import { getWs } from '../utils/constants';
 import styles from './feed.module.css';
 
 export const Feed = () => {
   const dispatch = useDispatch();
-  const {data, get} = useSelector(store => store.ws);
+  const {data, get} = useSelector(getWs);
   
   const orders = get ? data.orders.slice(0, 40) : []; 
   
@@ -16,10 +17,10 @@ export const Feed = () => {
   const inWorkOrders = get ? orders.map(order => order.status === 'pending' ? order.number : null): [];
   
   React.useEffect (() => {
-    dispatch({type: WS_CONNECTION_START});
+    dispatch(wsConnectionStart());
 
     return () => {
-      dispatch({ type: WS_CONNECTION_CLOSED });
+      dispatch(wsConnectionClosed());
     }
   }, [dispatch]);
 

@@ -5,10 +5,11 @@ import { updateUserInformation } from '../services/actions/profile';
 import { useDispatch, useSelector } from 'react-redux';
 import React from 'react';
 import { ProfileNav } from '../components/profile-nav/profile-nav';
+import { getUser } from '../utils/constants';
 
 export const Profile = () => {
   const dispatch = useDispatch();
-  const user = useSelector(store => store.profile.user); 
+  const user = useSelector(getUser); 
   const [password, setPassword] = React.useState('');
   const [newName, setNewName] = React.useState(user.name || '');  
   const [newEmail, setNewEmail] = React.useState(user.email || '');

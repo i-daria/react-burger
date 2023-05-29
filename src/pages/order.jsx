@@ -4,18 +4,24 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useLocation, useParams } from 'react-router';
 import { getOrderStatus, isDone } from "../utils/order";
 import styles from './order.module.css';
-import { WS_CONNECTION_START, WS_CONNECTION_START_AUTH, WS_CONNECTION_CLOSED } from '../services/actions/ws-action-types';
+import { WS_CONNECTION_START, WS_CONNECTION_CLOSED} from '../services/actions/ws-actions';
+import { WS_CONNECTION_START_AUTH, WS_CONNECTION_CLOSED_AUTH} from '../services/actions/ws-actions-auth';
 import { getCookie } from '../utils/cookie';
+import { getIngredients, getWs, getWsAuth } from '../utils/constants';
 
 export const Order = () => {
   const location = useLocation();
   const dispatch = useDispatch();
   const token = getCookie('refreshToken');
 
+  const isAuth = (location.pathname.includes('profile') && token);
+
   const { id } = useParams();
-  const wsStore = useSelector(store => store.ws);
-  const order = wsStore.get ? wsStore.data.orders.find(el => el._id === id) : null;  
-  const allIngredients = useSelector(store => store.ingredients.ingredients) 
+  const wsStore = useSelector(getWs);
+  const wsStoreAuth = useSelector(getWsAuth);
+
+  const order = isAuth ? getOrder(wsStoreAuth) : getOrder(wsStore); 
+  const allIngredients = useSelector(getIngredients) 
   const orderIngredients = order ? order.ingredients.map(ingredient => {
     const item = allIngredients.find(el => el._id === ingredient);
     return item;
@@ -23,17 +29,25 @@ export const Order = () => {
   const total = orderIngredients ? orderIngredients.reduce((acc, item) => acc + item.price , 0) : 0;
   const filteredIngredients = orderIngredients ? Array.from(new Set(orderIngredients.map(obj => obj))) : null; //ОТФИЛЬТРОВАТЬ УНИКАЛЬНЫЕ
 
+  function getOrder(store) {
+    return store.get ? store.data.orders.find(el => el._id === id) : null
+  }; 
+
   React.useEffect (() => {
-    if (location.pathname.includes('profile') && token) {      
+    if (isAuth) {      
       dispatch({type: WS_CONNECTION_START_AUTH});
     } else {
       dispatch({type: WS_CONNECTION_START});
     }
 
     return () => {
-      dispatch({ type: WS_CONNECTION_CLOSED });
+      if (isAuth) {           
+        dispatch({ type: WS_CONNECTION_CLOSED_AUTH });
+      } else {
+        dispatch({ type: WS_CONNECTION_CLOSED });
+      }      
     }
-  }, [dispatch, location.pathname, token]);
+  }, [dispatch, isAuth]);
 
   return orderIngredients && (
     <div className={`${styles.content} ${location.state && location.state.background ? styles.content_in_modal : ''}`}>

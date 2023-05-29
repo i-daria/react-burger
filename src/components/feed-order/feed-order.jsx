@@ -5,12 +5,13 @@ import { getOrderStatus, isDone } from '../../utils/order';
 import styles from './feed-order.module.css';
 import PropTypes from "prop-types";
 import { useSelector } from 'react-redux';
+import { FEED_URL, getIngredients, PROFILE_ORDERS_URL } from '../../utils/constants';
 
   export const FeedOrder = React.memo(({order}) => {
 
   const navigate = useNavigate();
   const location = useLocation();
-  const allIngredients = useSelector(store => store.ingredients.ingredients) 
+  const allIngredients = useSelector(getIngredients); 
   const orderIngredients = order.ingredients.map(ingredient => {
     const item = allIngredients.find(el => el._id === ingredient);
     return item;
@@ -27,17 +28,19 @@ import { useSelector } from 'react-redux';
     moreCountList = orderIngredients.slice(6);
   };
 
-  const total = orderIngredients.reduce((acc, item) => acc + item.price , 0);
+  const total = React.useMemo(() => {
+    return orderIngredients.reduce((acc, item) => acc + item.price, 0);
+  }, [orderIngredients]);
 
-  const isVisible = location.pathname === '/profile/orders';
+  const isVisible = location.pathname === PROFILE_ORDERS_URL;
     
   const onClick = (e) => {
     if (!e.target.classList.contains(styles.show_more_text)) {
-      if (location.pathname === '/feed') {
-        navigate(`/feed/${order._id}`, {state: { background: location}});
+      if (location.pathname === FEED_URL) {
+        navigate(`${FEED_URL}/${order._id}`, {state: { background: location}});
       };
       if (location.pathname === '/profile/orders') { 
-        navigate(`/profile/orders/${order._id}`, {state: { background: location}});
+        navigate(`${PROFILE_ORDERS_URL}/${order._id}`, {state: { background: location}});
       }
     } 
   };

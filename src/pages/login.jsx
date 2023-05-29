@@ -5,15 +5,16 @@ import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { loginUser, getUserInformation } from '../services/actions/profile';
 import { useDispatch, useSelector } from 'react-redux';
 import { getCookie } from '../utils/cookie';
+import { FORGOT_PASSWORD_URL, getIsLogin, HOME_URL, REGISTER_URL } from '../utils/constants';
 
 export const Login = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [email, setEmail] = React.useState('');
   const [password, setPassword] = React.useState('');
-  const isLogin = useSelector(store => store.profile.isLogin);
+  const isLogin = useSelector(getIsLogin);
   const { state } = useLocation();
-  const from = state?.from || '/';
+  const from = state?.from || HOME_URL;
   const accessToken = getCookie('accessToken');
 
   React.useEffect(() => {
@@ -56,8 +57,8 @@ export const Login = () => {
           <Button htmlType="submit" type="primary" size="medium">Войти</Button>
         </div>
       </form>
-      <div className={styles.label}>Вы — новый пользователь? <Link to='/register' className={styles.link}>Зарегистрироваться</Link></div>
-      <div className={styles.label}>Забыли пароль?  <Link to='/forgot-password' className={styles.link}>Восстановить пароль</Link></div>
+      <div className={styles.label}>Вы — новый пользователь? <Link to={REGISTER_URL} className={styles.link}>Зарегистрироваться</Link></div>
+      <div className={styles.label}>Забыли пароль?  <Link to={FORGOT_PASSWORD_URL} className={styles.link}>Восстановить пароль</Link></div>
     </div>
   );
 };

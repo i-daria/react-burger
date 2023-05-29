@@ -10,6 +10,20 @@ import IngredientDetails from '../ingredient-details/ingredient-details';
 import { ProtectedRouteElement } from '../protected-route-element/protected-route-element';
 import Modal from '../modal/modal';
 import { Order } from '../../pages/order';
+import {
+  HOME_URL,
+  REGISTER_URL,
+  LOGIN_URL,
+  PROFILE_URL,
+  FORGOT_PASSWORD_URL,
+  RESET_PASSWORD_URL,
+  FEED_URL,
+  FEED_ID_URL,
+  PROFILE_ORDERS_URL,
+  ORDERS_ID_URL,
+  INGREDIENTS_ID_URL,
+  NOT_FOUND_URL,
+} from "../../utils/constants";
 
 function App() {
   const dispatch = useDispatch();
@@ -33,25 +47,25 @@ function App() {
       <main className={styles.main}>    
       <React.Fragment>
         <Routes >
-          <Route path="/" element={<Home />} />          
-          <Route path="/feed" element={<Feed />} />       
-          <Route path="/profile" element={<ProtectedRouteElement element={<Profile />} from="/profile" />} />                
-          <Route path="/profile/orders" element={<ProtectedRouteElement element={< Orders />} from="/profile/orders" />} />  
-          <Route path="/register" element={<Register />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/forgot-password" element={<ForgotPassword />} from="/forgot-password" />
-          <Route path="/reset-password" element={<ResetPassword />} />
-          <Route path="*" element={<NotFound404 />} />               
+          <Route path={HOME_URL} element={<Home />} />          
+          <Route path={FEED_URL} element={<Feed />} />       
+          <Route path={PROFILE_URL} element={<ProtectedRouteElement element={<Profile />} from="/profile" />} />                
+          <Route path={PROFILE_ORDERS_URL} element={<ProtectedRouteElement element={< Orders />} from="/profile/orders" />} />  
+          <Route path={REGISTER_URL} element={<Register />} />
+          <Route path={LOGIN_URL} element={<Login />} />
+          <Route path={FORGOT_PASSWORD_URL} element={<ForgotPassword />} from="/forgot-password" />
+          <Route path={RESET_PASSWORD_URL} element={<ResetPassword />} />
+          <Route path={NOT_FOUND_URL} element={<NotFound404 />} />               
           {background && (
             <>
-            <Route path="/ingredients/:id" element={ <Modal title='Детали ингридиента' onClose={onClose}><IngredientDetails /></Modal>} />
-            <Route path="/feed/:id" element={ <Modal title='' onClose={() => navigate(-1)}><Order /></Modal>} />               
-            <Route path="/profile/orders/:id" element={ <Modal title='' onClose={() => navigate(-1)}><Order /></Modal>} />  
+            <Route path={INGREDIENTS_ID_URL} element={ <Modal title='Детали ингридиента' onClose={onClose}><IngredientDetails /></Modal>} />
+            <Route path={FEED_ID_URL} element={ <Modal title='' onClose={() => navigate(-1)}><Order /></Modal>} />               
+            <Route path={ORDERS_ID_URL} element={ <Modal title='' onClose={() => navigate(-1)}><Order /></Modal>} />  
             </>       
           )}          
-          <Route path="/ingredients/:id" element={<IngredientDetails />} />             
-          <Route path="/feed/:id" element={<Order />} />             
-          <Route path="/profile/orders/:id" element={<Order />} /> {/* Как передать сюда from="/profile/orders/:id" с актуальным id, иначе ProtectedRouteElement не работает( ?  */}
+          <Route path={INGREDIENTS_ID_URL} element={<IngredientDetails />} />             
+          <Route path={FEED_ID_URL} element={<Order />} />             
+          <Route path={ORDERS_ID_URL} element={<Order />} /> 
         </Routes>
         </React.Fragment>
       </main>
