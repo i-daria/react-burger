@@ -5,8 +5,9 @@ import PropTypes from 'prop-types';
 import { ingredientPropTypes } from '../../utils/prop-types';
 import { useDispatch } from 'react-redux';
 import {SET_CURRENT_INGREDIENT } from '../../services/actions/ingredients';
-import { SHOW_MODAL} from '../../services/actions/modal';
 import { useDrag } from 'react-dnd';
+import { useLocation, useNavigate } from 'react-router-dom';
+import { INGREDIENTS_URL } from '../../utils/constants';
 
 const BurgerIngredient = ({data, count}) => {
   const [, dragRef] = useDrag({
@@ -14,20 +15,19 @@ const BurgerIngredient = ({data, count}) => {
     item: data
   });
   const dispatch = useDispatch();
-  const {name, price, image} = data;
+  const navigate = useNavigate();
+  const location = useLocation();
+  const {_id, name, price, image} = data;
   const onClick = () => {
     dispatch({
       type: SET_CURRENT_INGREDIENT,
       data: data
     });
-
-    dispatch({
-      type: SHOW_MODAL
-    });
+    navigate( `${INGREDIENTS_URL}/${_id}`, {state: {background: location}});
   }
     
   return (
-    <div className={styles.ingredient} onClick={onClick} ref={dragRef}>
+    <div onClick={onClick}  className={styles.ingredient} ref={dragRef}>
       <img src={image} alt={name} className={styles.img} />
       <p className={`${styles.price} text text_type_digits-default price`}>
         {price}

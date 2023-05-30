@@ -11,7 +11,9 @@ import { useDrop} from 'react-dnd';
 import { ADD_INGREDIENT, ADD_BUN, CLEAR_INGREDIENTS } from '../../services/actions/ingredients';
 import {POST_ORDER_REQUEST, POST_ORDER_SUCCESS, POST_ORDER_ERROR} from '../../services/actions/order';
 import { v4 as uuid } from 'uuid';
-import { getSelectedIngredients } from '../../utils/constants'; 
+import { getIsLogin, getSelectedIngredients } from '../../utils/constants'; 
+import { useNavigate } from 'react-router';
+import { LOGIN_URL } from "../../utils/constants";
 
 const BurgerConstructor = () => {
   const dispatch = useDispatch();
@@ -36,7 +38,9 @@ const BurgerConstructor = () => {
   const selectedIngredients = useSelector(getSelectedIngredients);
   const fillings = selectedIngredients.ingredients;
   const buns = selectedIngredients.bun;
-  const total = React.useMemo(() => buns.price * 2 + fillings.reduce((total, item) => total + item.price, 0), [buns, fillings]);
+  const total = React.useMemo(() => buns.price * 2 + fillings.reduce((total, item) => total + item.price, 0), [buns, fillings]);  
+  const isLogin = useSelector(getIsLogin);
+  const navigate = useNavigate();
   
   const [orderModal, setOrderModal] = React.useState(false); //показать попап оформления заказа
   const showOrderModal = ()  => {
@@ -48,29 +52,33 @@ const BurgerConstructor = () => {
   };
 
   const onPostOrder = () => { 
-    dispatch({
-      type: POST_ORDER_REQUEST, 
-    });
-    postOrderToServer([buns, ...fillings])
-    .then(res => {
-      if (res.success === true) {
-        dispatch({
-          type: POST_ORDER_SUCCESS,
-          name: res.name,
-          number: res.order.number,
-        });
-        dispatch({
-          type: CLEAR_INGREDIENTS,
-        })
-      } else {
-        console.log(res)
-      }
-    })
-    .catch(error => dispatch({
-      type: POST_ORDER_ERROR})
-    );
+    if (!isLogin) {
+      navigate(LOGIN_URL);
+    } else {    
+      dispatch({
+        type: POST_ORDER_REQUEST, 
+      });
+      postOrderToServer([buns, ...fillings, buns])
+      .then(res => {
+        if (res.success) {
+          dispatch({
+            type: POST_ORDER_SUCCESS,
+            name: res.name,
+            number: res.order.number,
+          });
+          dispatch({
+            type: CLEAR_INGREDIENTS,
+          })
+        } else {
+          alert('Не получилось оформить заказ. Ошибка:' + res);
+        }
+      })
+      .catch(error => dispatch({
+        type: POST_ORDER_ERROR})
+      );
 
-    showOrderModal();
+      showOrderModal();
+    }
   };
 
   return (

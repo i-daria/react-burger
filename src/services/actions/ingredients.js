@@ -44,3 +44,12 @@ export const getAllIngredients = () => {
     });  
   }
 };
+
+export const setCurrentIngredient = (ingredient)  => ({
+  type: SET_CURRENT_INGREDIENT,
+  data: ingredient
+})
+
+export const resetCurrentIngredient = () => ({
+  type: RESET_CURRENT_INGREDIENT
+})

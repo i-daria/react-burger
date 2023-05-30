@@ -1,0 +1,14 @@
+.ordersContainer {   
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: 845px; 
+  gap: 24px;
+  margin: 0;
+  margin-bottom: 40px;
+  margin-top: -80px;
+  padding: 0;
+  padding-right: 8px;
+  max-height: 70vh;
+  overflow-y: scroll;
+}

@@ -1,0 +1,39 @@
+.container {
+  max-width: 480px;
+  margin: 0 auto;
+  margin-top: 180px;
+  text-align: center;
+}
+
+.input {
+  margin-bottom: 24px;
+}
+
+
+.button {
+  margin-bottom: 80px;
+}
+
+.label {
+  margin-bottom: 16px;
+  font-family: 'JetBrains Mono';
+  font-style: normal;
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 1.5;  
+  text-align: center;
+  color: #8585AD;
+}
+
+.link {
+  font-family: 'JetBrains Mono';
+  font-style: normal;
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 1.5;  
+  color: #4C4CFF;
+}
+
+.buttonsWrapper {
+  text-align: right;
+}
