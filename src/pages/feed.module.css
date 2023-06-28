@@ -44,6 +44,7 @@
   display: flex;
   flex-direction: column;
   flex-wrap: wrap;
+  column-gap: 5px;
   list-style: none;
   max-height: 305px;
   margin: 0;
