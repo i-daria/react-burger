@@ -46,7 +46,7 @@ interface IRegisterUserSuccess {
 }
 interface IRegisterUserFail {
   readonly type: typeof REGISTER_USER_FAIL,
-  readonly message: string,
+  readonly message: unknown,
 }
 interface ILoginUser {
   readonly type: typeof LOGIN_USER_REQUEST,
@@ -58,7 +58,7 @@ interface ILoginUserSuccess {
 }
 interface ILoginUserFail {
   readonly type: typeof LOGIN_USER_FAIL,
-  readonly message: string,
+  readonly message: unknown,
 }
 interface ILogoutUser {
   readonly type: typeof LOGOUT_USER_REQUEST,
@@ -68,7 +68,7 @@ interface ILogoutUserSuccess {
 }
 interface ILogoutUserFail {
   readonly type: typeof LOGOUT_USER_FAIL,
-  readonly message: string,
+  readonly message: unknown,
 }
 interface IGetUserInfo {
   readonly type: typeof GET_USER_INFO_REQUEST,
@@ -92,7 +92,7 @@ interface IUpdateUserInfoSuccess {
 }
 interface IUpdateUserInfoFail {
   readonly type: typeof UPDATE_USER_INFO_FAIL,
-  readonly message: string,
+  readonly message: unknown,
 }
 interface IRefreshToken {
   readonly type: typeof REFRESH_TOKEN_REQUEST,
@@ -112,7 +112,7 @@ interface IForgotPasswordSuccess {
 }
 interface IForgotPasswordFail {
   readonly type: typeof FORGOT_PASSWORD_FAIL,
-  readonly message: string,
+  readonly message: unknown,
 }
 interface IResetPassword {
   readonly type: typeof RESET_PASSWORD_REQUEST,
@@ -123,8 +123,29 @@ interface IResetPasswordSuccess {
 }
 interface IResetPasswordFail {
   readonly type: typeof RESET_PASSWORD_FAIL,
-  readonly message: string,
+  readonly message: unknown,
 }      
+
+
+//
+interface IRefreshUserTokenRequest {
+  type: typeof REFRESH_TOKEN_REQUEST;
+}
+
+interface IRefreshUserTokenSuccess {
+  type: typeof REFRESH_TOKEN_SUCCESS;
+}
+
+interface IRefreshUserTokenFail {
+  type: typeof REFRESH_TOKEN_FAIL;
+  message: string;
+}
+
+export type TRefreshUserTokenActions =
+  | IRefreshUserTokenRequest
+  | IRefreshUserTokenSuccess
+  | IRefreshUserTokenFail;
+
    
 export type TProfileActions = | IRegisterUser
   | IRegisterUserSuccess
@@ -149,7 +170,11 @@ export type TProfileActions = | IRegisterUser
   | IForgotPasswordFail
   | IResetPassword
   | IResetPasswordSuccess
-  | IResetPasswordFail;
+  | IResetPasswordFail
+
+  | IRefreshUserTokenRequest
+  | IRefreshUserTokenSuccess
+  | IRefreshUserTokenFail;
 
 export const registerUser: AppThunk = (email: string, password: string, name: string) => {
   return (dispatch: AppDispatch) => {
@@ -261,20 +286,36 @@ export const refreshUserToken: AppThunk = () => {
         dispatch({
           type: REFRESH_TOKEN_SUCCESS,
         });
-        dispatch(getUserInformation() as any);
+
+        dispatch({
+          type: GET_USER_INFO_REQUEST
+        });        
+        const response = await getUserInfo();
+        if (response && response.success) {
+          dispatch({
+            type: GET_USER_INFO_SUCCESS,
+            name: response.user.name,
+            email: response.user.email
+          });
+        } else {
+          dispatch({
+            type: GET_USER_INFO_FAIL,
+            message: response.message
+          });
+        }
       } else {
         dispatch({
           type: REFRESH_TOKEN_FAIL,
           message: res.message
-        })
+        });
       }
     } catch (err) {
       dispatch({
         type: REFRESH_TOKEN_FAIL,
         message: err
-      })
+      });
     }
-  }
+  };
 };
 
 export const getUserInformation: AppThunk = () => {  
@@ -291,53 +332,84 @@ export const getUserInformation: AppThunk = () => {
           email: res.user.email
         });
       } else if (res && res.message === 'Ошибка: 403') {
-        dispatch(refreshUserToken() as any);
+        dispatch({
+          type: REFRESH_TOKEN_REQUEST
+        });
+        const response = await refreshToken();
+        if (response && response.success) {
+          const accessToken = response.accessToken.split('Bearer ')[1];
+          const refreshToken = response.refreshToken;
+          setCookie('accessToken', accessToken);
+          setCookie('refreshToken', refreshToken);
+          dispatch({
+            type: REFRESH_TOKEN_SUCCESS,
+          });  
+          dispatch({
+            type: GET_USER_INFO_REQUEST
+          });
+          const result = await getUserInfo();
+          if (result && result.success) {
+            dispatch({
+              type: GET_USER_INFO_SUCCESS,
+              name: result.user.name,
+              email: result.user.email
+            });
+          }
+        }
       } else {
         dispatch({
-          type: GET_USER_INFO_FAIL,
-          message: res.message
-        });
-      }
+        type: GET_USER_INFO_FAIL,
+        message: res.message
+      })}
     } catch (err) {
-      if (err && err === 'Ошибка: 403') {
-        dispatch(refreshUserToken() as any);
-      } else {
-        dispatch({
-          type: GET_USER_INFO_FAIL,
-          message: err
-        });
-      }
+      dispatch({
+        type: GET_USER_INFO_FAIL,
+        message: err
+      });
     }
   }
 };
 
-export const updateUserInformation:AppThunk = (form: TUser) => {
-  return (dispatch: AppDispatch) => {
+export const updateUserInformation: AppThunk = (form: TUser) => {
+  return async (dispatch: AppDispatch) => {
     dispatch({
       type: UPDATE_USER_INFO_REQUEST
     });
-    updateUserInfo(form).then(res => {
-      if (res && res.success)  {
-        dispatch ({
+    try {
+      const res = await updateUserInfo(form);
+      if (res && res.success) {
+        dispatch({
           type: UPDATE_USER_INFO_SUCCESS,
           email: res.user.email,
           name: res.user.name
         });
-      } else if (res.message === 'Ошибка: 401'){
-        dispatch(refreshUserToken() as any);
+      } else if (res && res.message === 'Ошибка: 401') {
+        dispatch({
+          type: REFRESH_TOKEN_REQUEST
+        });
+        const response = await refreshToken();
+        if (response && response.success) {
+          const accessToken = response.accessToken.split('Bearer ')[1];
+          const refreshToken = response.refreshToken;
+          setCookie('accessToken', accessToken);
+          setCookie('refreshToken', refreshToken);
+          dispatch({
+            type: REFRESH_TOKEN_SUCCESS,
+          });
+        }
       } else {
-        dispatch ({
-          type: UPDATE_USER_INFO_FAIL,              
+        dispatch({
+          type: UPDATE_USER_INFO_FAIL,
           message: res.message
-        })
+        });
       }
-    }).catch(err => {
-      dispatch ({
-        type: UPDATE_USER_INFO_FAIL,              
+    } catch (err) {
+      dispatch({
+        type: UPDATE_USER_INFO_FAIL,
         message: err
-      })
-    });
-  }
+      });
+    }
+  };
 };
 
 

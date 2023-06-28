@@ -12,7 +12,6 @@ type TFeedOrder = {
 };
 
 export const FeedOrder: React.FC<TFeedOrder> = React.memo(({order}) => {
-
   const navigate = useNavigate();
   const location = useLocation();
   const allIngredients = useSelector(getIngredients); 
@@ -20,6 +19,7 @@ export const FeedOrder: React.FC<TFeedOrder> = React.memo(({order}) => {
     const item = allIngredients.find(el => el._id === ingredient);
     return item;
   }) as TIngredient[];
+
 
   let ingredientsCount = 6;
   let moreCount: number | null = null;
@@ -33,7 +33,9 @@ export const FeedOrder: React.FC<TFeedOrder> = React.memo(({order}) => {
   };
 
   const total = React.useMemo(() => {
-    return orderIngredients.reduce((acc, item) => acc + item.price, 0);
+    return orderIngredients.reduce((acc, item) => {
+       return item ? acc + item.price : acc + 0; 
+      }, 0);
   }, [orderIngredients]);
 
   const isVisible = location.pathname === PROFILE_ORDERS_URL;
@@ -82,7 +84,7 @@ export const FeedOrder: React.FC<TFeedOrder> = React.memo(({order}) => {
           {orderIngredients.slice(0, ingredientsCount).map((ingredient, index: number) => {
             return (
               <li className={`${styles.ingredient} ${moreCount && index === 0 ? styles.ingredient_last_background : ''}`} key={index}>
-                <img className={styles.img} src={ingredient.image} alt={ingredient.name}  />
+                <img className={styles.img} src={ingredient?.image} alt={ingredient?.name}  />
                 { (moreCount && index === 0) && (<span className={styles.show_more_text} onClick={showMoreIngredients} > +{moreCount} </span>)}   
               </li>
             ); 

@@ -9,16 +9,32 @@ export const Feed: React.FC = () => {
   const dispatch = useDispatch();
   const {data, get} = useSelector(getWs);
   
-  const orders = (get && data !== undefined) ? data.orders.slice(0, 40) : []; 
-  
-  const total = (get && data !== undefined) ? data.total : 0;
-  const totalToday = (get && data !== undefined) ? data.totalToday : 0;
-  const readyOrders = get ? orders.map(order => order.status === 'done' ? order.number : null) : [];
-  const inWorkOrders = get ? orders.map(order => order.status === 'pending' ? order.number : null): [];
+  const orders = React.useMemo(() => {
+    return get && data !== undefined ? data.orders.slice(0, 40) : [];
+  }, [data, get]);
+
+  const total = React.useMemo(() => {
+    return get && data !== undefined ? data.total : 0;
+  }, [data, get]);
+
+  const totalToday = React.useMemo(() => {
+    return get && data !== undefined ? data.totalToday : 0;
+  }, [data, get]);
+
+  const readyOrders = React.useMemo(() => {
+    return get
+      ? orders.map((order) => (order.status === 'done' ? order.number : null))
+      : [];
+  }, [get, orders]);
+
+  const inWorkOrders = React.useMemo(() => {
+    return get
+      ? orders.map((order) => (order.status === 'pending' ? order.number : null))
+      : [];
+  }, [get, orders]);
   
   React.useEffect (() => {
     dispatch(wsConnectionStart());
-
     return () => {
       dispatch(wsConnectionClosed());
     }
