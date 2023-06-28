@@ -10,4 +10,4 @@
 ### Технологии:
 HTML5, CSS3, JavaScript, JSX, Babel, Webpack, React, библиотека React Developer Burger Ui Components, библиотека React DND, Redux, TypeScript
 
-### Сайт: [Stellar burger] (https://i-daria.github.io/react-burger/)
+### Сайт: [Stellar burger](https://i-daria.github.io/react-burger/)
